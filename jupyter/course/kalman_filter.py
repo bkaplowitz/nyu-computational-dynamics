@@ -65,7 +65,6 @@ class KalmanFilter:
         self.obs.append(self.y)
         # We compute the Kalman gain parameter (regression coefficient)
         self.K = self.A @ self.Σ @ self.G.T @ inv(self.G @ self.Σ @ self.G.T + self.R)
-        # Compute the residual of the observation compared to our prediction
         # Record the kalman gain and residuals
         self.Ks.append(self.K)
         self.resids.append(self.a)
