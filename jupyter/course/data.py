@@ -29,18 +29,19 @@ def year_frac(ts):
 def myLoadDataFRED(series,transform='none',start = datetime.datetime(1800,1,1),end = datetime.datetime(2050,1,1)):
     # work out start and end 
     data = pdr.data.DataReader(series,'fred',start,end)
-    d = dict()
-    d['orig'] = data
-    d['transform'] = transform
-    d['year'] = year_frac(ts=data.index)
+    d = {'orig': data, 'transform': transform, 'year': year_frac(ts=data.index)}
     d['freq'] = int(round(1/(d['year'][1]-d['year'][0]),0))
     T = len(d['year'])
     for i in series:
         d[i] = data[i].to_numpy()
         if transform=='pct_change_year_ago':
-            d[i][d['freq']:T] = (d[i][d['freq']:T] - d[i][0:T-d['freq']]) / d[i][0:T-d['freq']] * 100
-            d[i][0:d['freq']] = float('nan')
-        
+            d[i][d['freq'] : T] = (
+                (d[i][d['freq'] : T] - d[i][: T - d['freq']])
+                / d[i][: T - d['freq']]
+                * 100
+            )
+            d[i][:d['freq']] = float('nan')
+
     return d
 
 # ==============================================================================
